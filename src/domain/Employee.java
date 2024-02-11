@@ -4,6 +4,7 @@ import java.util.Comparator;
 
 public class Employee {
   public static class EmployeeComparator<T extends Employee> implements Comparator<Employee> {
+
     private String sortType;
 
     public EmployeeComparator(String sortType) {
