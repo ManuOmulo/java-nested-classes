@@ -34,8 +34,20 @@ public class Meal {
     return Item.getPrice(total, conversionRate);
   }
 
-  public void addBurgerToppings(Item... toppings) {
-    burger.addToppings(toppings);
+  public void addBurgerToppings(String... toppings) {
+    List<Item> toppingsList = new ArrayList<>();
+
+    for (String topping : toppings) {
+      switch (topping) {
+        case "Bacon" -> toppingsList.add(new Item("Bacon", "regular", 2));
+        case "Avocado" -> toppingsList.add(new Item("Avocado", "small", 3));
+        case "Shrimp" -> toppingsList.add(new Item("Shrimp", "jumbo", 4));
+        case "Pork" -> toppingsList.add(new Item("Pork", "thin", 3));
+        case "Beef" -> toppingsList.add(new Item("Beef", "lean", 3));
+        default -> toppingsList.add(new Item("Cheese", "regular", 2));
+      }
+    }
+    burger.addToppings(toppingsList);
   }
 
   @Override
@@ -62,7 +74,7 @@ public class Meal {
 
     @Override
     public String toString() {
-      return "%10s%15s $%.2f".formatted(type, name, getPrice(price, conversionRate));
+      return "%-11s%-15s $%.2f".formatted(type, name, getPrice(price, conversionRate));
     }
 
     private static double getPrice(double price, double rate) {
@@ -73,30 +85,44 @@ public class Meal {
 
   private class Burger extends Item {
     private boolean isRegular = Meal.this.isDeluxe;
-    private double price = Meal.this.price;
+    private double price;
     private List<Item> toppings = new ArrayList<>();
 
     public Burger(String name, String type) {
-      super(name, type, Meal.this.isDeluxe ? Meal.this.price : 15);
+      super(name, type, (Meal.this.isDeluxe ? 15 : Meal.this.price));
     }
 
-    private void addToppings(Item... toppingsList) {
+    private void addToppings(List<Item> toppingsList) {
       if (isRegular) {
         for (Item topping : toppingsList) {
           toppings.add(topping);
           price += topping.price;
         }
+      } else {
+        for (Item topping : toppingsList) {
+          toppings.add(topping);
+        }
       }
 
-      for (Item topping : toppingsList) {
-        toppings.add(topping);
-      }
     }
 
     @Override
     public String toString() {
-      String toppingsList = toppings.isEmpty() ? "" : toppings.toString();
-      return super.toString() + " " + toppingsList;
+      if (toppings.isEmpty()) {
+        return ("%-10s %-15s $%.2f ").formatted(super.name, super.type, price);
+      }
+
+      System.out.println("Toppings: ");
+
+      for (Item topping : toppings) {
+        getToppingDetails(topping);
+      }
+
+      return ("%-10s %-15s $%.2f ").formatted(super.name, super.type, price);
+    }
+
+    private void getToppingDetails(Item topping) {
+      System.out.printf("- %-5s %5s $%.2f\n".formatted(topping.name, topping.type, topping.price));
     }
   }
 }

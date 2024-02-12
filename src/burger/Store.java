@@ -9,5 +9,7 @@ public class Store {
     System.out.println(USRegularMeal);
 
     Meal deluxeMeal = new Meal(1, true);
+    deluxeMeal.addBurgerToppings("Cheese", "Pork");
+    System.out.println(deluxeMeal);
   }
 }
