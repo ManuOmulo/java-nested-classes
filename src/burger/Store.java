@@ -13,7 +13,7 @@ public class Store {
     USRegularMeal.addBurgerToppings("Bacon", "Avocado", "Cheese");
     System.out.println(USRegularMeal);
 
-    Meal deluxeMeal = new Meal(1, true);
+    Meal deluxeMeal = new Meal(true);
     deluxeMeal.addBurgerToppings("Cheese", "Pork");
     System.out.println(deluxeMeal);
   }

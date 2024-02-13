@@ -20,10 +20,14 @@ public class Meal {
     this(conversionRate, false);
   }
 
+  public Meal(boolean isDeluxe) {
+    this(1, isDeluxe);
+  }
+
   public Meal(double conversionRate, boolean isDeluxe) {
     this.conversionRate = conversionRate;
     this.isDeluxe = isDeluxe;
-    burger = new Burger(isDeluxe ? "deluxe" : "regular", "burger", isDeluxe ? 15 : price);
+    burger = new Burger(isDeluxe ? "deluxe" : "regular", isDeluxe ? 15 : price);
     drink = new Item("coke", "drink", 1.5);
     System.out.println(drink.name);
     side = new Item("fries", "side", 2.0);
@@ -90,6 +94,10 @@ public class Meal {
 
     public Burger(String name, String type, double price) {
       super(name, type, price);
+    }
+
+    public Burger(String name, double price) {
+      this(name, "burger", price);
     }
 
     private void addToppings(List<Item> toppingsList) {
