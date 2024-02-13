@@ -23,7 +23,7 @@ public class Meal {
   public Meal(double conversionRate, boolean isDeluxe) {
     this.conversionRate = conversionRate;
     this.isDeluxe = isDeluxe;
-    burger = new Burger(isDeluxe ? "deluxe" : "regular", "burger");
+    burger = new Burger(isDeluxe ? "deluxe" : "regular", "burger", isDeluxe ? 15 : price);
     drink = new Item("coke", "drink", 1.5);
     System.out.println(drink.name);
     side = new Item("fries", "side", 2.0);
@@ -44,7 +44,8 @@ public class Meal {
         case "Shrimp" -> toppingsList.add(new Item("Shrimp", "jumbo", 4));
         case "Pork" -> toppingsList.add(new Item("Pork", "thin", 3));
         case "Beef" -> toppingsList.add(new Item("Beef", "lean", 3));
-        default -> toppingsList.add(new Item("Cheese", "regular", 2));
+        case "Cheese" -> toppingsList.add(new Item("Cheese", "regular", 2));
+        default -> toppingsList.add(new Item("No toppings", "", 0));
       }
     }
     burger.addToppings(toppingsList);
@@ -84,16 +85,15 @@ public class Meal {
 
 
   private class Burger extends Item {
-    private boolean isRegular = Meal.this.isDeluxe;
-    private double price;
+    private double price = super.price;
     private List<Item> toppings = new ArrayList<>();
 
-    public Burger(String name, String type) {
-      super(name, type, (Meal.this.isDeluxe ? 15 : Meal.this.price));
+    public Burger(String name, String type, double price) {
+      super(name, type, price);
     }
 
     private void addToppings(List<Item> toppingsList) {
-      if (isRegular) {
+      if (!isDeluxe) {
         for (Item topping : toppingsList) {
           toppings.add(topping);
           price += topping.price;
@@ -103,13 +103,12 @@ public class Meal {
           toppings.add(topping);
         }
       }
-
     }
 
     @Override
     public String toString() {
       if (toppings.isEmpty()) {
-        return ("%-10s %-15s $%.2f ").formatted(super.name, super.type, price);
+        return ("%-10s %-15s $%.2f ").formatted(super.name, super.type, Item.getPrice(price, conversionRate));
       }
 
       System.out.println("Toppings: ");
@@ -118,11 +117,11 @@ public class Meal {
         getToppingDetails(topping);
       }
 
-      return ("%-10s %-15s $%.2f ").formatted(super.name, super.type, price);
+      return ("%-10s %-15s $%.2f ").formatted(super.name, super.type, Item.getPrice(price, conversionRate));
     }
 
     private void getToppingDetails(Item topping) {
-      System.out.printf("- %-5s %5s $%.2f\n".formatted(topping.name, topping.type, topping.price));
+      System.out.printf("- %-5s %5s $%.2f\n".formatted(topping.name, topping.type, Item.getPrice(topping.price, conversionRate)));
     }
   }
 }
